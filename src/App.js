@@ -7,46 +7,65 @@ import './App.css'
 function App() {
 
   const [todos, setTodos] = useState([]);
+  const [editItems, setEditItems] = useState({});
 
-  const LOCAL_STORAGE_KEY = '';
+  const LOCAL_STORAGE_KEY = 'todos';
   useEffect(() => {
-    // fires when app component mounts to the DOM
-    const storageTodo = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    if (storageTodo) {
-      setTodos(storageTodo);
+    const loadHistory = () => {
+      try {
+        // fires when app component mounts to the DOM
+        const storageTodo = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        if (storageTodo) {
+          setTodos([...todos, storageTodo]);
+        }
+      } catch{
+        console.error("Not a JSON response");
+      }
     }
+    loadHistory();
   }, [])
-  useEffect(() => {
-    // fires when todos array gets updated
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-  }, [todos])
+
 
   const addTodo = (todo) => {
     setTodos([...todos, todo]);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
   }
 
   const handleDelete = (key) => {
-    console.log(key);
     const filterItems = todos.filter(item => item.key !== key)
     setTodos(filterItems);
   }
-  const updateHandle = (text, key) => {
+  // const updateHandle = (text, key) => {
+  //   const updateTodos = todos.map(todo => {
+  //     if (todo.key === key) {
+  //       todo.text = text;
+  //     }
+  //     return todo;
+  //   })
+  //   setTodos(updateTodos);
+  // }
 
-    const updateTodos = todos.map(todo => {
-      if (todo.key === key) {
-        todo.text = text;
-      }
-      return todo;
-    })
-    setTodos(updateTodos);
+  const updateHandle = (key) => {
+    const filterItems = todos.filter(item => item.key !== key)
+    setTodos(filterItems);
+    const selectItems = todos.find(todo => todo.key === key);
+
+    setEditItems(selectItems);
   }
+
+  const clearAll = () => {
+    setTodos([]);
+  }
+
 
   return (
     <AppWrapper>
       <h2>Todo List</h2>
       <AppWrap>
 
-        <TodoForm addTodo={addTodo} />
+        <TodoForm addTodo={addTodo}
+          clearAll={clearAll} editItems={editItems}
+        />
         <TodoList items={todos}
           handleDelete={handleDelete}
           updateHandle={updateHandle} />

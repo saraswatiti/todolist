@@ -6,11 +6,10 @@ import { FormWrap } from './style'
 * @function TodoForm
 **/
 
-const TodoForm = ({ addTodo }) => {
+const TodoForm = ({ addTodo, clearAll, editItems }) => {
     const [currentItems, setCurrentItems] = useState({ text: '', key: '' });
 
     const inputHandle = (evt) => {
-
         setCurrentItems({
             text: evt.target.value,
             key: Date.now()
@@ -21,19 +20,21 @@ const TodoForm = ({ addTodo }) => {
         evt.preventDefault();
         if (currentItems.text !== '') {
             addTodo(currentItems);
-            setCurrentItems({ text: '', key: '' })
+            setCurrentItems({ text: '', key: '' });
         }
 
     }
+
+
     return (
         <FormWrap style={{
             margin: '30px 0',
         }} >
             <form onSubmit={formHandle}>
-                <input type="text" placeholder='Enter your todo lists' value={currentItems.text} onChange={inputHandle} />
-                <button type='submit'>Add Tasks</button>
+                <input type="text" placeholder='Enter your todo lists' value={currentItems.text || editItems.text || ''} onChange={inputHandle} />
+                {editItems ? <button type='submit'>Edit Tasks</button> : <button type='submit'>Add Tasks</button>}
+                <button type='submit' style={{ marginLeft: '5px' }} onClick={clearAll}>clear All</button>
             </form>
-
         </FormWrap >
     )
 

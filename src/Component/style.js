@@ -34,16 +34,13 @@ button{
 `
 export const ListWrap = style.div`
     position:relative;
-    input{
-        border: 0;
+    p{
         background: #fff;
         padding: 5px 70px 5px 15px;
         font-size:18px;
-        
+        margin:0;
     }
-    input:focus{
-        outline:0;
-    }
+
     svg{
         color: #000;
         cursor: pointer;
